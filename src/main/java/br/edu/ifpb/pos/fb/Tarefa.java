@@ -40,8 +40,8 @@ public class Tarefa implements Serializable {
     @Temporal(TemporalType.DATE)    
     private Date dataCriacao;
     
-    @Temporal(TemporalType.DATE)
-    private Date dataLimiteExecucao;
+    
+    private String dataLimiteExecucao;
     
     @Temporal(TemporalType.DATE)
     private Date dataExecucao;
@@ -76,11 +76,11 @@ public class Tarefa implements Serializable {
         this.dataCriacao = dataCriacao;
     }
 
-    public Date getDataLimiteExecucao() {
+    public String getDataLimiteExecucao() {
         return dataLimiteExecucao;
     }
 
-    public void setDataLimiteExecucao(Date dataLimiteExecucao) {
+    public void setDataLimiteExecucao(String dataLimiteExecucao) {
         this.dataLimiteExecucao = dataLimiteExecucao;
     }
 

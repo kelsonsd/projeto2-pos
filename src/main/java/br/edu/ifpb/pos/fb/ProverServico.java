@@ -43,17 +43,34 @@ public class ProverServico extends AbstractFacade<Tarefa> implements Serializabl
     public List<User> getFriends() {
         return fb.getFriends();
     }
-
+    
     @POST
     @Override
     @Consumes("application/json")
     public void criarTarefa(Tarefa entity) {
         super.create(entity);
     }
+    
+    @POST
+    @Path("tasks/{nome}/{descricao}/{datalimite}/{prioridade}/")
+    @Override
+    @Consumes("application/json")
+    @Produces("application/json")
+    public Tarefa criarTarefa2(@PathParam("nome") String nome, @PathParam("descricao") String descricao, 
+            @PathParam("datalimite") String datalimite, @PathParam("prioridade") String prioridade) {        
+        
+        Tarefa tarefa = new Tarefa();
+        tarefa.setNome(nome);
+        tarefa.setDescricao(descricao);
+        tarefa.setDataLimiteExecucao(datalimite);
+        tarefa.setPrioridade(prioridade);
+        return super.edit(tarefa);
+    }
 
     @POST
     @Path("newTask")
     @Consumes("application/json")
+    @Produces("application/json")
     @Override
     public void atualizarTarefa(Long idTask) {        
         Tarefa t = super.find(idTask);
@@ -65,7 +82,7 @@ public class ProverServico extends AbstractFacade<Tarefa> implements Serializabl
     @GET
     @Path("task/{id}")
     @Override
-    @Produces("text/html")
+    @Produces("application/json")
     public Tarefa notificarStatusTask(@PathParam("id") String id) {        
         Tarefa t = super.find(new Long(id));
 
@@ -75,18 +92,15 @@ public class ProverServico extends AbstractFacade<Tarefa> implements Serializabl
         System.out.println(t.getNome());
 
         fb.notificarStatusTask(t);        
-
-        //redirecionar para uma pÃ¡gina (tarefa.xhtml) com os campos da tarefa setados.
-        //adicionar botÃ£o (finalizar tarefa) na pÃ¡gina,
-        //que deverÃ¡ notificar a alteraÃ§Ã£o de status.        
+    
         return super.edit(t);
-        //return  "tarefa.xhtml?faces-redirect=true";
+        
     }
 
     @GET
     @Path("taskteste/{id}")
     @Override
-    @Produces("text/html")
+    @Produces("application/json")
     public Response notificarStatusTaskTeste(@PathParam("id") String id) {
         Tarefa t = super.find(new Long(id));
 
@@ -105,8 +119,7 @@ public class ProverServico extends AbstractFacade<Tarefa> implements Serializabl
         } catch (URISyntaxException ex) {
             System.out.println("erro");
             Logger.getLogger(ProverServico.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
+        }        
         return Response.temporaryRedirect(location).build();
     }
 
@@ -114,6 +127,7 @@ public class ProverServico extends AbstractFacade<Tarefa> implements Serializabl
     @Path("atualizar")
     @Override
     @Consumes("application/json")
+    @Produces("application/json")
     public Tarefa edit(Tarefa entity) {
         return super.edit(entity);
     }

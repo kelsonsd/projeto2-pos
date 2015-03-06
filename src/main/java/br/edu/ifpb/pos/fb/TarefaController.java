@@ -1,6 +1,5 @@
 package br.edu.ifpb.pos.fb;
 
-import br.edu.ifpb.pos.fb.service.AbstractFacade;
 import com.restfb.types.User;
 import java.io.Serializable;
 import java.util.Date;
@@ -10,12 +9,8 @@ import javax.annotation.Resource;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
-import javax.naming.Context;
-import javax.naming.InitialContext;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.UserTransaction;
 import org.primefaces.context.RequestContext;
 
 /**
@@ -92,8 +87,7 @@ public class TarefaController implements Serializable{
         this.tarefa.setIdResponsavel(this.responsavel.getId());
         this.tarefa.setDataCriacao(new Date());
         this.tarefa.setStatus("EM ABERTO");
-        System.out.println("dados da tarefa setados");
-        
+                
         System.out.println("new Tarefa()");
         
         ConsumidorREST consumidorREST = new ConsumidorREST();         
@@ -115,7 +109,7 @@ public class TarefaController implements Serializable{
         this.update(this.getTarefaTemp());
         System.out.println("passou");
         
-        return "sucesso.xhtml";
+        return "sucesso.xhtml?faces-redirect=true";
     }
     
     public void redirecionar(Tarefa tarefa) {
