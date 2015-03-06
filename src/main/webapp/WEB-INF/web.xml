@@ -4,6 +4,10 @@
         <param-name>javax.faces.PROJECT_STAGE</param-name>
         <param-value>Development</param-value>
     </context-param>
+<!--    <context-param>
+        <param-name>primefaces.THEME</param-name>
+        <param-value>bootstrap</param-value>
+    </context-param>-->
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
@@ -17,10 +21,18 @@
         <servlet-name>ApplicationConf</servlet-name>
         <servlet-class>br.edu.ifpb.pos.fb.ApplicationConf</servlet-class>
     </servlet>  
+    
+    
     <servlet-mapping>
         <servlet-name>ApplicationConf</servlet-name>
         <url-pattern>/ApplicationConf</url-pattern>
     </servlet-mapping>   
+    
+    <error-page>  
+        <exception-type>javax.servlet.ServletException</exception-type>  
+        <location>/redirect.xhtml?faces-redirect=true</location>  
+    </error-page> 
+    
     <session-config>
         <session-timeout>
             30

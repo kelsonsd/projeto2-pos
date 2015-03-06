@@ -1,7 +1,18 @@
 package br.edu.ifpb.pos.fb.service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.Resource;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+import javax.transaction.UserTransaction;
 
 /**
  *
@@ -13,11 +24,15 @@ public abstract class AbstractFacade<T> {
     public AbstractFacade(Class<T> entityClass) {
         this.entityClass = entityClass;
     }
-
+    
     protected abstract EntityManager getEntityManager();
 
     public void create(T entity) {
-        getEntityManager().persist(entity);        
+        
+            
+            getEntityManager().persist(getEntityManager().merge(entity));        
+            
+      
     }
 
     public T edit(T entity) {        
@@ -57,6 +72,16 @@ public abstract class AbstractFacade<T> {
         cq.select(getEntityManager().getCriteriaBuilder().count(rt));
         javax.persistence.Query q = getEntityManager().createQuery(cq);
         return ((Long) q.getSingleResult()).intValue();
+    }
+    
+    public Object buscaObjetoComNamedQuery(String namedQuery, Map<String, Object> parametros) {
+        Query query = getEntityManager().createNamedQuery(namedQuery);
+        if (parametros != null) {
+            for (String nomeParametro : parametros.keySet()) {
+                query.setParameter(nomeParametro, parametros.get(nomeParametro));
+            }
+        }
+        return query.getResultList().get(0);
     }
     
 }

@@ -1,5 +1,6 @@
 package br.edu.ifpb.pos.fb;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import javax.ws.rs.ApplicationPath;
@@ -10,12 +11,13 @@ import javax.ws.rs.core.Application;
  * @author Kelson
  */
 @ApplicationPath("rest")
-public class ApplicationConf extends Application {
+public class ApplicationConf extends Application implements Serializable {
 
     @Override
     public Set<Class<?>> getClasses() {
         Set<Class<?>> resources = new HashSet<>();         
         resources.add(br.edu.ifpb.pos.fb.ProverServico.class);
         return resources;
-    }
+    }    
+   
 }

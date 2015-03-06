@@ -4,37 +4,43 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui">
+    
     <h:head>
         <title>Facelet Title</title>
     </h:head>
-    <h:body>
+    <h:body>       
         <f:view>
             <h:form>
-                <h1><h:outputText value="Criar Tarefa"/></h1>
+                <h1><h:outputText value="Tarefa"/></h1>
                 <p:panelGrid columns="2">
-                    <p:outputLabel value="Nome" for="nome" />
-                    <p:inputText id="nome" value="#{tarefaController.tarefa.nome}" title="Nome" />
+                    <h:outputText value="Nome:"/>
+                    <h:outputText value="#{tarefaMB.tarefaTemp.nome}" title="Nome"/>
                     
-                    <p:outputLabel value="Descrição" for="descricao" />
-                    <p:inputTextarea id="descricao" value="#{tarefaController.tarefa.descricao}" autoResize="true" title="Descrição" />                    
-
-                    <p:outputLabel value="Data limite execução" for="dataLimiteExecucao" />
-                    <p:calendar id="dataLimiteExecucao" value="#{tarefaController.tarefa.dataLimiteExecucao}" pattern="dd/MM/yyyy" showOn="button" title="Data limite execução" />                    
-
-                    <p:outputLabel value="Prioridade" for="prioridade" />
-                    <p:selectOneRadio id="prioridade" value="#{tarefaController.tarefa.prioridade}">
-                        <f:selectItem itemLabel="Baixa" itemValue="Baixa" />
-                        <f:selectItem itemLabel="Média" itemValue="Média" />
-                        <f:selectItem itemLabel="Alta" itemValue="Alta" />
-                    </p:selectOneRadio>
+                    <h:outputText value="Descricao:"/>
+                    <h:outputText value="#{tarefaMB.tarefaTemp.descricao}" title="Descricao"/>
                     
-                    <p:outputLabel value="Responsável" for="responsavel" />
-                    <p:inputText id="responsavel" value="#{tarefaController.responsavel.name}" disabled="true" title="Responsável" />
+                    <h:outputText value="DataCriacao:"/>
+                    <h:outputText value="#{tarefaMB.tarefaTemp.dataCriacao}" title="DataCriacao">
+                        <f:convertDateTime pattern="MM/dd/yyyy" />
+                    </h:outputText>
                     
-                    <p:outputLabel value="Criador" for="criador" />
-                    <p:inputText id="criador" value="#{tarefaController.criador.name}" disabled="true" title="Criador" />
-
-                    <p:commandButton value="Criar" action="#{tarefaController.salvarTarefa()}" icon="ui-icon-check" title="Criar" />
+                    <h:outputText value="DataLimiteExecucao:"/>
+                    <h:outputText value="#{tarefaMB.tarefaTemp.dataLimiteExecucao}" title="DataLimiteExecucao">
+                        <f:convertDateTime pattern="MM/dd/yyyy" />
+                    </h:outputText>
+                    
+                    <h:outputText value="DataExecucao:"/>
+                    <h:outputText value="#{tarefaMB.tarefaTemp.dataExecucao}" title="DataExecucao">
+                        <f:convertDateTime pattern="MM/dd/yyyy" />
+                    </h:outputText>
+                                        
+                    <h:outputText value="Prioridade:"/>
+                    <h:outputText value="#{tarefaMB.tarefaTemp.prioridade}" title="Prioridade"/>                    
+                    
+                    <h:outputText value="Status:"/>
+                    <h:outputText value="#{tarefaMB.tarefaTemp.status}" title="Status"/>                                   
+                    
+                    <p:commandButton value="Finalizar Tarefa" action="#{tarefaMB.finalizarTarefa()}" icon="ui-icon-check" title="Finalizar Tarefa" />
                 </p:panelGrid>
             </h:form>
         </f:view>

@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
@@ -21,9 +23,15 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 
 @Entity
 @XmlRootElement
-public class Tarefa implements Serializable {    
+@NamedQueries({
+    @NamedQuery(name= Tarefa.BUSCAR_TAREFA_PELO_ID, query="SELECT t from Tarefa t WHERE t.id=:idTarefa")
+})
+public class Tarefa implements Serializable {  
+    
+    public static final String BUSCAR_TAREFA_PELO_ID = "buscar.tarefa.pelo.id";
+    
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)    
+    @GeneratedValue(strategy= GenerationType.IDENTITY)    
     private Long id;
     
     private String nome;
@@ -151,6 +159,10 @@ public class Tarefa implements Serializable {
     public void setNome(String nome) {
         this.nome = nome;
     }
-    
+
+    @Override
+    public String toString() {
+        return "Tarefa{" + "id=" + id + ", nome=" + nome + ", descricao=" + descricao + ", dataCriacao=" + dataCriacao + ", dataLimiteExecucao=" + dataLimiteExecucao + ", dataExecucao=" + dataExecucao + ", prioridade=" + prioridade + ", status=" + status + ", responsavel=" + responsavel + ", criador=" + criador + ", idResponsavel=" + idResponsavel + ", idCriador=" + idCriador + '}';
+    }    
     
 }

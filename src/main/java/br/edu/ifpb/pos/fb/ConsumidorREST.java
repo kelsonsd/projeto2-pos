@@ -46,21 +46,6 @@ public class ConsumidorREST {
         return resource.request(MediaType.APPLICATION_JSON).post(Entity.json(requestEntity), Tarefa.class);
     }    
     
-//    public Tarefa find(Object responseType) throws ClientErrorException {
-//        WebTarget resource = webTarget;
-//        resource = resource.path("find");        
-//        GenericType<Tarefa> genericType = new GenericType<Tarefa>() {};
-//        return resource.request(MediaType.APPLICATION_JSON).get(genericType);
-//    }
-//    
-//    public <T> T find_JSON(Class<T> responseType, String id) throws ClientErrorException {
-//        WebTarget resource = webTarget;
-//        resource = resource.path("find");
-//        
-//        resource = resource.path(java.text.MessageFormat.format("{0}", new Object[]{id}));
-//        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
-//    }
-    
     public void close() {
         client.close();
     }

@@ -3,8 +3,11 @@ package br.edu.ifpb.pos.fb;
 import br.edu.ifpb.pos.fb.service.AbstractFacade;
 import com.restfb.types.User;
 import java.io.Serializable;
+import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -14,6 +17,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
 
 /**
  *
@@ -51,27 +55,59 @@ public class ProverServico extends AbstractFacade<Tarefa> implements Serializabl
     @Path("newTask")
     @Consumes("application/json")
     @Override
-    public void atualizarTarefa(Long idTask) {
-        FBService fbService = new FBService();
+    public void atualizarTarefa(Long idTask) {        
         Tarefa t = super.find(idTask);
 
-        fbService.publishTask(t);
+        fb.publishTask(t);
         super.edit(t);
     }
 
     @GET
     @Path("task/{id}")
     @Override
-    @Consumes("application/json")
-    public Tarefa notificarStatusTask(@PathParam("id") String id) {
-        FBService fbService = new FBService();
+    @Produces("text/html")
+    public Tarefa notificarStatusTask(@PathParam("id") String id) {        
         Tarefa t = super.find(new Long(id));
 
-        t.setDataExecucao(new Date());        
+        t.setDataExecucao(new Date());
         t.setStatus("EM EXECUÇÃO");
-        
-        fbService.notificarStatusTask(t);
+
+        System.out.println(t.getNome());
+
+        fb.notificarStatusTask(t);        
+
+        //redirecionar para uma pÃ¡gina (tarefa.xhtml) com os campos da tarefa setados.
+        //adicionar botÃ£o (finalizar tarefa) na pÃ¡gina,
+        //que deverÃ¡ notificar a alteraÃ§Ã£o de status.        
         return super.edit(t);
+        //return  "tarefa.xhtml?faces-redirect=true";
+    }
+
+    @GET
+    @Path("taskteste/{id}")
+    @Override
+    @Produces("text/html")
+    public Response notificarStatusTaskTeste(@PathParam("id") String id) {
+        Tarefa t = super.find(new Long(id));
+
+        t.setDataExecucao(new Date());
+        t.setStatus("EM EXECUÇÃO");
+
+        System.out.println(t.getNome());
+
+        fb.notificarStatusTask(t);   
+        
+        TarefaController.setTarefaTemp(super.edit(t));        
+        
+        java.net.URI location = null;
+        try {
+            location = new java.net.URI("../tarefa.xhtml");
+        } catch (URISyntaxException ex) {
+            System.out.println("erro");
+            Logger.getLogger(ProverServico.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return Response.temporaryRedirect(location).build();
     }
 
     @POST

@@ -26,15 +26,16 @@ public class FBService implements Serializable {
     private final FacebookClient facebookClient;
     private final String accessToken;    
 
+
+    public FBService() {
+        this.accessToken = "CAAOKFVdZCy3ABAB8prZCx6l8IALkvxT1hVh5BEQ5FHa5cE8V3bG0czNiUktTebrEI53R4jylwyudZAq0CuLQyVuz3n5kE2dEF5WJChZBhmKrPXAZB9t5HnTEDYEfuor2g5TJhgIH24vkBySZAuTmC8FkUnempBKg5ZCtsih5hl9ZCKAfJuCNkQnpNxMkM131m94OoFGZCU8dVWqxz6FhvBzLIMZCc7cU9sxBsCbOhhZBgpPkwZDZD";
+        facebookClient = new DefaultFacebookClient(accessToken, Version.VERSION_2_2);
+    }
+    
     public FacebookClient getFacebookClient() {
         return facebookClient;
     }
-
-    public FBService() {
-        this.accessToken = "CAAOKFVdZCy3ABAOjUQ1evsUNFTlZAsBlGft2YdEMLt0ZCbPiBLWqRLz8LWrNhZCQEgWjSLjcyWb1IM7jCuZA0iNgg7IOrGBslyo7WY8lUZCuQxjWVQITc66E1LTkvMaXdLc31TNdnSR048vnZAg8wgnF0ZBqNYg9cnmiZCjkoI26NIfXpq8sPMHb69LZCySBaf7YTTILGw6mHXUdfXffSUlZAZAVSwenAtB2Lum1tjySLRXEdQZDZD";
-        facebookClient = new DefaultFacebookClient(accessToken, Version.VERSION_2_2);
-    }
-
+    
     public List<User> getFriends() {
         List<User> friends = new ArrayList<>();
         Connection<User> myFriends = facebookClient.fetchConnection("me/taggable_friends", User.class);
@@ -52,19 +53,23 @@ public class FBService implements Serializable {
     }
 
     public String publishTask(Tarefa tarefa) {
+        System.out.println("Nome: " + tarefa.getNome());
+        
         String image = "http://www.ifpb.edu.br/arquivos/imagens/icones-mapas/logo-ifpb.png";
         
         String task = new JsonStringer().object().key("og:title").value(tarefa.getNome())
                 .key("og:description").value(tarefa.getDescricao())
-                .key("og:image").value(image).key("og:url")
-                .value(getPath() + String.valueOf(tarefa.getId())).endObject().toString();
+                .key("og:image").value(image)
+                .key("og:url").value(getPath() + String.valueOf(tarefa.getId())).endObject().toString();
+        
 
         FacebookType publish = facebookClient.publish(
                 "me/projetopos:servico", Post.class,
                 Parameter.with("pos", task),
-                Parameter.with("message", "Status: " + tarefa.getStatus()
-                        + " - Criador: " + this.getUser().getName()
-                        + " - Responsável: @[" + tarefa.getIdResponsavel() + "]"));
+                Parameter.with("message", "Criador: " + this.getUser().getName()
+                        + " - Responsável: @[" + tarefa.getIdResponsavel() + "]"
+                        + " - Status: " + tarefa.getStatus()
+                        + " - Prioridade: " + tarefa.getPrioridade()));
 
         return publish.getId();
     }
@@ -74,9 +79,11 @@ public class FBService implements Serializable {
                 "me/projetopos:servico", Post.class,
                 Parameter.with("pos", "http://samples.ogp.me/1003546559674813"),
                 Parameter.with("message", "@[kelsonsd]"
-                        + " - a tarefa: " + tarefa.getNome() + " alterou o status para: " + tarefa.getStatus() + "."));
-    }
-
+                        + " - a tarefa: " + tarefa.getNome() 
+                        + " alterou o status para: " + tarefa.getStatus() + ". "
+                        + "Responsável: @["+ tarefa.getIdResponsavel() +"]"));
+    }    
+    
     private String getIp() {
         InetAddress ia = null;
         try {
@@ -89,7 +96,13 @@ public class FBService implements Serializable {
     }
 
     public String getPath() {        
-        return "http://" + this.getIp() + ":8080/projeto2-pos/rest/fb/task/";
+//        return "http://" + this.getIp() + ":8080/projeto2-pos/rest/fb/task/";        
+        return "http://" + this.getIp() + ":8080/projeto2-pos/rest/fb/taskteste/";        
+    }
+
+    public void redirecionar(Tarefa t) {
+        TarefaController tc = new TarefaController();
+        tc.redirecionar(t);        
     }
 
 }
