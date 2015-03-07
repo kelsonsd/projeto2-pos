@@ -17,21 +17,21 @@
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>*.xhtml</url-pattern>
     </servlet-mapping>    
-    <servlet>
+        
+<!--    <servlet>
         <servlet-name>ApplicationConf</servlet-name>
         <servlet-class>br.edu.ifpb.pos.fb.ApplicationConf</servlet-class>
-    </servlet>  
-    
+    </servlet>      
     
     <servlet-mapping>
         <servlet-name>ApplicationConf</servlet-name>
         <url-pattern>/ApplicationConf</url-pattern>
-    </servlet-mapping>   
+    </servlet-mapping>   -->
     
-    <error-page>  
+<!--    <error-page>  
         <exception-type>javax.servlet.ServletException</exception-type>  
         <location>/redirect.xhtml?faces-redirect=true</location>  
-    </error-page> 
+    </error-page> -->
     
     <session-config>
         <session-timeout>

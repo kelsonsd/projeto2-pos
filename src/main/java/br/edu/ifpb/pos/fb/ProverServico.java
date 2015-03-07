@@ -8,22 +8,25 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
  *
  * @author Kelson
  */
-@Stateless
+//@Stateless
 @Path("fb")
 public class ProverServico extends AbstractFacade<Tarefa> implements Serializable, Provedora {
 
@@ -31,6 +34,8 @@ public class ProverServico extends AbstractFacade<Tarefa> implements Serializabl
     private EntityManager em;
 
     FBService fb = new FBService();
+    @Resource
+    private javax.transaction.UserTransaction utx;
 
     public ProverServico() {
         super(Tarefa.class);
@@ -52,19 +57,28 @@ public class ProverServico extends AbstractFacade<Tarefa> implements Serializabl
     }
     
     @POST
-    @Path("tasks/{nome}/{descricao}/{datalimite}/{prioridade}/")
+    @Path("tasks")
     @Override
-    @Consumes("application/json")
+    @Consumes({"application/x-www-form-urlencoded","application/json"})
     @Produces("application/json")
-    public Tarefa criarTarefa2(@PathParam("nome") String nome, @PathParam("descricao") String descricao, 
-            @PathParam("datalimite") String datalimite, @PathParam("prioridade") String prioridade) {        
+    public Tarefa criarTarefa2(@FormParam("nome") String nome, @FormParam("descricao") String descricao, 
+            @FormParam("datalimite") String datalimite, @FormParam("prioridade") String prioridade,
+            @FormParam("idCriador") String idCriador, @FormParam("idResponsavel") String idResponsavel) {        
+        
+        System.out.println(nome + descricao + datalimite + prioridade);
         
         Tarefa tarefa = new Tarefa();
         tarefa.setNome(nome);
         tarefa.setDescricao(descricao);
         tarefa.setDataLimiteExecucao(datalimite);
-        tarefa.setPrioridade(prioridade);
-        return super.edit(tarefa);
+        tarefa.setPrioridade(prioridade);        
+        tarefa.setDataCriacao(new Date());
+        tarefa.setIdCriador(idCriador);
+        tarefa.setIdResponsavel(idResponsavel);
+        
+        System.out.println(tarefa.toString());
+        
+        return update(tarefa);        
     }
 
     @POST
@@ -83,26 +97,9 @@ public class ProverServico extends AbstractFacade<Tarefa> implements Serializabl
     @Path("task/{id}")
     @Override
     @Produces("application/json")
-    public Tarefa notificarStatusTask(@PathParam("id") String id) {        
-        Tarefa t = super.find(new Long(id));
-
-        t.setDataExecucao(new Date());
-        t.setStatus("EM EXECUÇÃO");
-
-        System.out.println(t.getNome());
-
-        fb.notificarStatusTask(t);        
-    
-        return super.edit(t);
-        
-    }
-
-    @GET
-    @Path("taskteste/{id}")
-    @Override
-    @Produces("application/json")
-    public Response notificarStatusTaskTeste(@PathParam("id") String id) {
-        Tarefa t = super.find(new Long(id));
+    @Consumes({"application/x-www-form-urlencoded","application/json"})
+    public Response notificarStatusTask(@PathParam("id") String id) {        
+        Tarefa t = findTarefa(new Long(id));
 
         t.setDataExecucao(new Date());
         t.setStatus("EM EXECUÇÃO");
@@ -121,6 +118,24 @@ public class ProverServico extends AbstractFacade<Tarefa> implements Serializabl
             Logger.getLogger(ProverServico.class.getName()).log(Level.SEVERE, null, ex);
         }        
         return Response.temporaryRedirect(location).build();
+        
+    }
+
+    @GET
+    @Path("taskteste/{id}")
+    @Override
+    @Produces("application/json")
+    public Tarefa notificarStatusTaskTeste(@PathParam("id") String id) {
+        Tarefa t = findTarefa(new Long(id));
+
+        t.setDataExecucao(new Date());
+        t.setStatus("EM EXECUÇÃO");
+
+        System.out.println(t.getNome());
+
+        fb.notificarStatusTask(t);   
+        
+        return t;
     }
 
     @POST
@@ -136,5 +151,31 @@ public class ProverServico extends AbstractFacade<Tarefa> implements Serializabl
     protected EntityManager getEntityManager() {
         return em;
     }
+
+    public Tarefa update(Object object) {
+        try {
+            utx.begin();
+            Tarefa t = (Tarefa) em.merge(object);
+            utx.commit();
+            return t;
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
+            throw new RuntimeException(e);
+        }
+    }
+    
+    public Tarefa findTarefa(Object object) {
+        try {
+            utx.begin();
+            Tarefa t = (Tarefa) em.find(Tarefa.class, object);
+            utx.commit();
+            return t;
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
+            throw new RuntimeException(e);
+        }
+    }
+    
+    
 
 }

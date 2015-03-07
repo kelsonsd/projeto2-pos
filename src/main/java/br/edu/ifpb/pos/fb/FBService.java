@@ -28,7 +28,7 @@ public class FBService implements Serializable {
 
 
     public FBService() {
-        this.accessToken = "CAAOKFVdZCy3ABAMleBLZASCQLAowqnX1FC7diFnRjDfXmcCYdU4wqJynKl3xXv6xpGtjZC1V6BDuEZAOrr0PTZAv2fr3un9VhjYrV2urJ8QQtBAqwv2FtcZCLhV1h2EMx9LEHMhFBQ9meeZCiI7BbXqStg2yPEID7UjZALYDVWYwDkUSr9AYre8lXB3dUmGVtsx5v1lzgGLgf2tHAky0g13dzYPbHa5oBWC9FRLNIvXlZCgZDZD";
+        this.accessToken = "CAAOKFVdZCy3ABAAWrmZAVQCu3Ok59STZBozZBA4jm2cVmOjvZCQMQLh0tfaKIdYXJ3Hb46rvrJSlZCGEI820heWntWpyJc64yY3ZBtRyB1pV8q6k7aystuonQJnqyHnwdC8S9sCRyw1O0Cefw9VTZCNl5MkyE8awn7X9EFxd2fxAZBIZCh4rMubOCt95PvYfl0PUaspKvto0fbmJbaS9oIPYOr7adzE7WwIcOZCYBlxph7DigZDZD";
         facebookClient = new DefaultFacebookClient(accessToken, Version.VERSION_2_2);
     }
     

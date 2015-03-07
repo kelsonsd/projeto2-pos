@@ -3,6 +3,7 @@ package br.edu.ifpb.pos.fb;
 import com.restfb.types.User;
 import java.util.List;
 import javax.ejb.Remote;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
@@ -14,10 +15,11 @@ import javax.ws.rs.core.Response;
 public interface Provedora {
     public List<User> getFriends();
     public void criarTarefa(Tarefa entity);
-    public Tarefa criarTarefa2(@PathParam("nome") String nome, @PathParam("descricao") String descricao, 
-            @PathParam("datalimite") String datalimite, @PathParam("prioridade") String prioridade);
+    public Tarefa criarTarefa2(@FormParam("nome") String nome, @FormParam("descricao") String descricao, 
+            @FormParam("datalimite") String datalimite, @FormParam("prioridade") String prioridade,
+            @FormParam("idCriador") String idCriador, @FormParam("idResponsavel") String idResponsavel);
     public void atualizarTarefa(Long idTask);
     public Tarefa edit(Tarefa entity);
-    public Tarefa notificarStatusTask(String idTask);
-    public Response notificarStatusTaskTeste(String idTask);
+    public Response notificarStatusTask(String idTask);
+    public Tarefa notificarStatusTaskTeste(String idTask);
 }
